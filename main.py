@@ -1,42 +1,36 @@
-"""
-Scanning Endpoints based on URL
-"""
-
 import time
 import requests
 
-URL = "http://example.com/"
-
-# Endpoints list
-endpoints = ["api", "login", "admin", "users"]
-
-# delay time between queries in secconds  
-DELAY = 1
-
-# log file
-LOG_FILE = open("log.txt", "w")
-
-for endpoint in endpoints:
-    # generating full enpoint url
-    FULL_URL = URL + endpoint
-    
+# DEFINE FUNCTION TO PROCESS EACH ENDPOINT
+def process_endpoint(URL, ENDPOINT, DELAY, LOG_FILE):
+    FULL_URL = URL + ENDPOINT
     print("Checking: " + FULL_URL)
     
-    # Wysyłanie zapytania HTTP GET do adresu URL
-    response = requests.get(FULL_URL)
+    try:
+        RESPONSE = requests.get(FULL_URL)
+        # CHECK IF RESPONSE IS VALID (STATUS CODE BETWEEN 200 AND 399)
+        if 200 <= RESPONSE.status_code < 400:
+            LOG_FILE.write("Endpoint: " + ENDPOINT + "\n")
+            LOG_FILE.write("URL: " + FULL_URL + "\n")
+            LOG_FILE.write("Status code: " + str(RESPONSE.status_code) + "\n")
+            LOG_FILE.write("\n")
+            print("Status code: " + str(RESPONSE.status_code))
+        else:
+            print("Invalid response: " + str(RESPONSE.status_code))
+    except requests.exceptions.RequestException as e:
+        print("Error: " + str(e))
     
-    # Writing response to log file
-    LOG_FILE.write("Endpoint: " + endpoint + "\n")
-    LOG_FILE.write("URL: " + FULL_URL + "\n")
-    LOG_FILE.write("Status code: " + str(response.status_code) + "\n")
-    LOG_FILE.write("\n")
-    
-    # Wyświetlanie odpowiedzi na konsoli
-    print("Status code: " + str(response.status_code))
-    print()
-    
-    # delay wait
     time.sleep(DELAY)
 
-# closing log file
+# SET PARAMETERS
+URL = "http://example.com/"
+ENDPOINTS = ["api", "login", "admin", "users"]
+DELAY = 1
+LOG_FILE = open("log.txt", "w")
+
+# PROCESS EACH ENDPOINT
+for ENDPOINT in ENDPOINTS:
+    process_endpoint(URL, ENDPOINT, DELAY, LOG_FILE)
+
+# CLOSE LOG FILE
 LOG_FILE.close()
