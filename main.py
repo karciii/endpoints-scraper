@@ -1,5 +1,6 @@
 import time
 import requests
+import yaml
 
 class EndpointChecker:
     def __init__(self, base_url, endpoints, delay, log_file):
@@ -35,10 +36,21 @@ class EndpointChecker:
         # Close log file
         self.log_file.close()
 
+# open yaml file
+with open("config.yaml", "r") as f:
+    config = yaml.load(f, Loader=yaml.FullLoader)
+
+# get parameters from config file
+base_url = config["settings"]["base_url"]
+endpoints = config["settings"]["endpoints"]
+delay = config["settings"]["delay"]
+log_file = config["settings"]["log_file_name"]
+
+
 # set parameters
-base_url = "http://example.com/"
-endpoints = ["api", "login", "admin", "users"]
-delay = 1
+# base_url = "http://example.com/"
+# endpoints = ["api", "login", "admin", "users"]
+# delay = 1
 log_file = open("log.txt", "w")
 
 # Create an instance of EndpointChecker and call the check_all_endpoints method

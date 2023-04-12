@@ -1,0 +1,6 @@
+settings:
+  base_url: http://example.com/
+  endpoints : ["api", "login", "admin", "users"]
+  delay : 1
+  log_file_name: log.txt
+  
